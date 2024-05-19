@@ -2,6 +2,7 @@ package ru.example.framework;
 
 import ru.example.framework.annotation.After;
 import ru.example.framework.annotation.Before;
+import ru.example.framework.annotation.Skip;
 import ru.example.framework.annotation.Test;
 
 import java.lang.annotation.Annotation;
@@ -20,6 +21,13 @@ public class ProcessingAnnotation {
             List<Method> afterMethods = getMethods(testClass, After.class);
 
             for (Method testMethod : testMethods) {
+                if (testMethod.isAnnotationPresent(Skip.class)) {
+                    String reason = testMethod.getAnnotation(Skip.class).reason();
+                    System.out.println("Skipping test: " + testMethod.getName() + " (Reason: " + reason + ")");
+                    statistic.skipped();
+                    continue;
+                }
+
                 Object instanceTest = testClass.getDeclaredConstructor().newInstance();
                 try {
                     invokeMethods(instanceTest, beforeMethods);

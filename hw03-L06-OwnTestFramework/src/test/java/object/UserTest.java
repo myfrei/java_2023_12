@@ -2,6 +2,7 @@ package object;
 
 import ru.example.framework.annotation.After;
 import ru.example.framework.annotation.Before;
+import ru.example.framework.annotation.Skip;
 import ru.example.framework.annotation.Test;
 import ru.example.object.Address;
 import ru.example.object.Phone;
@@ -47,6 +48,13 @@ public class UserTest {
         if (!user.getPhones().contains(phone)) {
             throw new RuntimeException("Phone not added: " + phone);
         }
+    }
+
+    @Skip(reason = "This test is not implemented yet")
+    @Test(hint = "Check Remove Phone")
+    public void testRemovePhone() {
+        // Этот тест пока не реализован
+        throw new RuntimeException("This test is not implemented yet");
     }
 
     @After
