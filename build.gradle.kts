@@ -4,8 +4,10 @@ import org.gradle.plugins.ide.idea.model.IdeaLanguageLevel
 
 plugins {
     idea
+    id("fr.brouillard.oss.gradle.jgitver")
     id("io.spring.dependency-management")
     id("org.springframework.boot") apply false
+    id("name.remal.sonarlint") apply false
     id("com.diffplug.spotless") apply false
 }
 
@@ -33,6 +35,8 @@ allprojects {
     val guava: String by project
     val slf4j: String by project
     val logback: String by project
+    val jmh: String by project
+    val asm: String by project
 
     apply(plugin = "io.spring.dependency-management")
     dependencyManagement {
@@ -45,6 +49,9 @@ allprojects {
             dependency("com.google.guava:guava:$guava")
             dependency("org.slf4j:slf4j-api:$slf4j")
             dependency("ch.qos.logback:logback-classic:$logback")
+            dependency("org.openjdk.jmh:jmh-core:$jmh")
+            dependency("org.openjdk.jmh:jmh-generator-annprocess:$jmh")
+            dependency("org.ow2.asm:asm-commons:$asm")
         }
     }
 }
@@ -65,6 +72,26 @@ subprojects {
     configure<com.diffplug.gradle.spotless.SpotlessExtension> {
         java {
             palantirJavaFormat("2.38.0")
+        }
+    }
+
+    plugins.apply(fr.brouillard.oss.gradle.plugins.JGitverPlugin::class.java)
+    extensions.configure<fr.brouillard.oss.gradle.plugins.JGitverPluginExtension> {
+        strategy("PATTERN")
+        nonQualifierBranches("main,master")
+        tagVersionPattern("\${v}\${<meta.DIRTY_TEXT}")
+        versionPattern(
+            "\${v}\${<meta.COMMIT_DISTANCE}\${<meta.GIT_SHA1_8}" +
+                    "\${<meta.QUALIFIED_BRANCH_NAME}\${<meta.DIRTY_TEXT}-SNAPSHOT"
+        )
+    }
+
+    tasks.withType<Test> { // Настройка задачи Test для выполнения тестов JUnit
+        useJUnitPlatform()
+        testLogging.showExceptions = true
+        reports {
+            junitXml.required.set(true)
+            html.required.set(true)
         }
     }
 }
