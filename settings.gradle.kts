@@ -24,6 +24,7 @@ pluginManagement {
 
 rootProject.name = "java_2023_12"
 include("hw01-gradle")
+include("hw02-L04-generics")
 
 
 
