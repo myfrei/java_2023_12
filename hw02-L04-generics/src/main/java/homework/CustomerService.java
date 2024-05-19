@@ -14,7 +14,8 @@ public class CustomerService {
             return null;
         }
         Customer key = firstEntry.getKey();
-        return new AbstractMap.SimpleEntry<>(new Customer(key.getId(), key.getName(), key.getScores()), firstEntry.getValue());
+        return new AbstractMap.SimpleEntry<>(
+                new Customer(key.getId(), key.getName(), key.getScores()), firstEntry.getValue());
     }
 
     public Map.Entry<Customer, String> getNext(Customer customer) {
@@ -23,7 +24,8 @@ public class CustomerService {
             return null;
         }
         Customer key = higherEntry.getKey();
-        return new AbstractMap.SimpleEntry<>(new Customer(key.getId(), key.getName(), key.getScores()), higherEntry.getValue());
+        return new AbstractMap.SimpleEntry<>(
+                new Customer(key.getId(), key.getName(), key.getScores()), higherEntry.getValue());
     }
 
     public void add(Customer customer, String data) {
