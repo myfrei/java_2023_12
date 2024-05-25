@@ -6,10 +6,12 @@ import ru.example.log.TestLoggingInterface;
 
 public class Demo {
     public static void main(String[] args) {
-        TestLoggingInterface loggingProxy = (TestLoggingInterface) new LoggingProxy(new TestLogging()).createProxy();
+        TestLoggingInterface loggingProxy = LoggingProxy.createProxy(new TestLogging());
 
         loggingProxy.calculation(6);
         loggingProxy.calculation(4, 8);
-        loggingProxy.calculation(2, 5, "test");
+        loggingProxy.calculation(2, 5, "7");
+
+        System.out.println("Sum: " + loggingProxy.getSum());
     }
 }
