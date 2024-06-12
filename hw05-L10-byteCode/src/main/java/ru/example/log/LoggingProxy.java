@@ -11,16 +11,20 @@ import ru.example.log.anotation.Log;
 
 public class LoggingProxy implements InvocationHandler {
     private static final Logger logger = LoggerFactory.getLogger(LoggingProxy.class);
-    private final TestLoggingInterface testLoggingInterface;
+    private final Object target;
 
-    public LoggingProxy(TestLoggingInterface testLoggingInterface) {
-        this.testLoggingInterface = testLoggingInterface;
+    public LoggingProxy(Object target) {
+        this.target = target;
     }
 
-    public static TestLoggingInterface createProxy(TestLoggingInterface testLoggingInterface) {
-        InvocationHandler handler = new LoggingProxy(testLoggingInterface);
-        return (TestLoggingInterface) Proxy.newProxyInstance(
-                LoggingProxy.class.getClassLoader(), new Class<?>[] {TestLoggingInterface.class}, handler);
+    @SuppressWarnings("unchecked")
+    public static <T> T createProxy(T target) {
+        InvocationHandler handler = new LoggingProxy(target);
+        return (T) Proxy.newProxyInstance(
+                target.getClass().getClassLoader(),
+                target.getClass().getInterfaces(),
+                handler
+        );
     }
 
     @Override
@@ -28,7 +32,7 @@ public class LoggingProxy implements InvocationHandler {
         if (methodCache.contains(getHashKey(method))) {
             logger.info("executed method: {}, param: {}", method.getName(), getParameters(args));
         }
-        return method.invoke(testLoggingInterface, args);
+        return method.invoke(target, args);
     }
 
     private static final HashSet<String> methodCache = new HashSet<>();
