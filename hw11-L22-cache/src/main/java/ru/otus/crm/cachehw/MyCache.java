@@ -1,11 +1,16 @@
 package ru.otus.crm.cachehw;
 
 import java.util.Map;
-import java.util.WeakHashMap;
 import java.util.Set;
+import java.util.WeakHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class MyCache<K, V> implements HwCache<K, V> {
+
+    private static final Logger log = LoggerFactory.getLogger(MyCache.class);
+
     private final Map<K, V> cache = new WeakHashMap<>();
     private final Set<HwListener<K, V>> listeners = new CopyOnWriteArraySet<>();
 
@@ -40,7 +45,11 @@ public class MyCache<K, V> implements HwCache<K, V> {
 
     private void notifyListeners(K key, V value, String action) {
         for (HwListener<K, V> listener : listeners) {
-            listener.notify(key, value, action);
+            try {
+                listener.notify(key, value, action);
+            } catch (Exception e) {
+                log.error("Error during listener notification", e);
+            }
         }
     }
 }

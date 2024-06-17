@@ -20,9 +20,6 @@ public final class Phone extends BaseObject {
 
     @Override
     public String toString() {
-        return "Phone{" +
-                "id=" + getId() +
-                ", number='" + number + '\'' +
-                '}';
+        return "Phone{" + "id=" + getId() + ", number='" + number + '\'' + '}';
     }
 }

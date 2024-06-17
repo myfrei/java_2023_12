@@ -22,7 +22,9 @@ public class AddressTest {
 
     @Test(hint = "Check Address Fields")
     public void testCheckAddressFields() {
-        if (!address.getCity().equals("Moscow") || !address.getStreet().equals("Leninsky Prospekt") || address.getHouseNumber() != 123) {
+        if (!address.getCity().equals("Moscow")
+                || !address.getStreet().equals("Leninsky Prospekt")
+                || address.getHouseNumber() != 123) {
             throw new RuntimeException("Wrong Address fields: " + address);
         }
     }

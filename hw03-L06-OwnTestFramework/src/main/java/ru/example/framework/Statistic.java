@@ -38,8 +38,10 @@ public class Statistic {
 
     public void printStatistics() {
         System.out.println("Total tests: " + total);
-        System.out.println("Passed tests: " + passed + " - " + Math.round((double) passed / (total - skipped) * 100) + "%");
-        System.out.println("Failed tests: " + failed + " - " + Math.round((double) failed / (total - skipped) * 100) + "%");
+        System.out.println(
+                "Passed tests: " + passed + " - " + Math.round((double) passed / (total - skipped) * 100) + "%");
+        System.out.println(
+                "Failed tests: " + failed + " - " + Math.round((double) failed / (total - skipped) * 100) + "%");
         System.out.println("Skipped tests: " + skipped);
     }
 }

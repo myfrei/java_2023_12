@@ -1,16 +1,15 @@
 package ru.otus.jdbc.demo;
 
+import java.sql.SQLException;
+import java.util.Collections;
+import java.util.List;
+import javax.sql.DataSource;
 import org.flywaydb.core.Flyway;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.otus.jdbc.core.repository.executor.DbExecutorImpl;
 import ru.otus.jdbc.crm.datasource.DriverManagerDataSource;
 import ru.otus.jdbc.crm.model.Client;
-
-import javax.sql.DataSource;
-import java.sql.SQLException;
-import java.util.Collections;
-import java.util.List;
 
 public class ExecutorDemo {
     private static final String URL = "jdbc:postgresql://localhost:5430/demoDB";

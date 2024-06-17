@@ -26,7 +26,9 @@ public class EntitySQLMetaDataImpl implements EntitySQLMetaData {
         StringBuilder sb = new StringBuilder();
         sb.append("SELECT * FROM ").append(entityClassMetaData.getName());
         if (isFilterById) {
-            sb.append(" WHERE ").append(entityClassMetaData.getIdField().getName()).append(" = ?");
+            sb.append(" WHERE ")
+                    .append(entityClassMetaData.getIdField().getName())
+                    .append(" = ?");
         }
         return sb.toString();
     }
@@ -34,10 +36,13 @@ public class EntitySQLMetaDataImpl implements EntitySQLMetaData {
     @Override
     public String getInsertSql() {
         StringBuilder sb = new StringBuilder();
-        sb.append("INSERT INTO ").append(entityClassMetaData.getName()).append(" (")
+        sb.append("INSERT INTO ")
+                .append(entityClassMetaData.getName())
+                .append(" (")
                 .append(separatedBy(entityClassMetaData.getFieldsWithoutId(), ", "))
                 .append(") VALUES (")
-                .append(preparePlaceholders(entityClassMetaData.getFieldsWithoutId().size()))
+                .append(preparePlaceholders(
+                        entityClassMetaData.getFieldsWithoutId().size()))
                 .append(")");
         return sb.toString();
     }
@@ -45,16 +50,18 @@ public class EntitySQLMetaDataImpl implements EntitySQLMetaData {
     @Override
     public String getUpdateSql() {
         StringBuilder sb = new StringBuilder();
-        sb.append("UPDATE ").append(entityClassMetaData.getName()).append(" SET ")
+        sb.append("UPDATE ")
+                .append(entityClassMetaData.getName())
+                .append(" SET ")
                 .append(prepareSetClause(entityClassMetaData.getFieldsWithoutId()))
-                .append(" WHERE ").append(entityClassMetaData.getIdField().getName()).append(" = ?");
+                .append(" WHERE ")
+                .append(entityClassMetaData.getIdField().getName())
+                .append(" = ?");
         return sb.toString();
     }
 
     private String prepareSetClause(List<Field> fields) {
-        return fields.stream()
-                .map(field -> field.getName() + " = ?")
-                .collect(Collectors.joining(", "));
+        return fields.stream().map(field -> field.getName() + " = ?").collect(Collectors.joining(", "));
     }
 
     private String preparePlaceholders(int count) {
@@ -62,8 +69,6 @@ public class EntitySQLMetaDataImpl implements EntitySQLMetaData {
     }
 
     private String separatedBy(List<Field> fields, String separator) {
-        return fields.stream()
-                .map(Field::getName)
-                .collect(Collectors.joining(separator));
+        return fields.stream().map(Field::getName).collect(Collectors.joining(separator));
     }
 }

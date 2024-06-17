@@ -19,17 +19,20 @@ public class CounterBanknotes {
 
     public void addBanknotes(int banknotesCount) {
         if (banknotesCount < 0) {
-            throw new RuntimeException("A negative number of bills has been received. banknotesCount: " + banknotesCount);
+            throw new RuntimeException(
+                    "A negative number of bills has been received. banknotesCount: " + banknotesCount);
         }
         count += banknotesCount;
     }
 
     public void getBanknotes(int banknotesCount) {
         if (banknotesCount < 0) {
-            throw new RuntimeException("A negative number of bills has been received. banknotesCount: " + banknotesCount);
+            throw new RuntimeException(
+                    "A negative number of bills has been received. banknotesCount: " + banknotesCount);
         }
         if (this.count < banknotesCount) {
-            throw new RuntimeException("The requested amount is less than zero. banknotesCount: " + banknotesCount + ", countBanknote: " + count);
+            throw new RuntimeException("The requested amount is less than zero. banknotesCount: " + banknotesCount
+                    + ", countBanknote: " + count);
         }
         count -= banknotesCount;
     }
