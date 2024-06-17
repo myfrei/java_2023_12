@@ -5,6 +5,7 @@ import ru.otus.jdbc.mapper.Id;
 public class Client {
     @Id
     private Long id;
+
     private String name;
 
     public Client() {}

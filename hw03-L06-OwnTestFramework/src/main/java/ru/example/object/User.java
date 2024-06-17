@@ -16,12 +16,11 @@ public final class User extends BaseObject {
 
     @Override
     public String toString() {
-        return "User{" +
-                "id=" + getId() +
-                ", name='" + name + '\'' +
-                ", address=" + address +
-                ", phones=" + phones +
-                '}';
+        return "User{" + "id="
+                + getId() + ", name='"
+                + name + '\'' + ", address="
+                + address + ", phones="
+                + phones + '}';
     }
 
     @Override

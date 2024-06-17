@@ -21,10 +21,7 @@ public class LoggingProxy implements InvocationHandler {
     public static <T> T createProxy(T target) {
         InvocationHandler handler = new LoggingProxy(target);
         return (T) Proxy.newProxyInstance(
-                target.getClass().getClassLoader(),
-                target.getClass().getInterfaces(),
-                handler
-        );
+                target.getClass().getClassLoader(), target.getClass().getInterfaces(), handler);
     }
 
     @Override

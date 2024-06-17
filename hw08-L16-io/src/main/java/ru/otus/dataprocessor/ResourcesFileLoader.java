@@ -1,12 +1,11 @@
 package ru.otus.dataprocessor;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
-
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
 import ru.otus.model.Measurement;
 
 public class ResourcesFileLoader implements Loader {

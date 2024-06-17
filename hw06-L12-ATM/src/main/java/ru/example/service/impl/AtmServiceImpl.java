@@ -1,13 +1,12 @@
 package ru.example.service.impl;
 
-import ru.example.model.enums.Banknote;
-import ru.example.service.AtmService;
-import ru.example.service.CashCassette;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import ru.example.model.enums.Banknote;
+import ru.example.service.AtmService;
+import ru.example.service.CashCassette;
 
 public class AtmServiceImpl implements AtmService {
     private final int id;
@@ -68,7 +67,8 @@ public class AtmServiceImpl implements AtmService {
             return false;
         }
 
-        withdrawal.forEach((denomination, count) -> cashCassettes.get(denomination).getBanknotes(count));
+        withdrawal.forEach(
+                (denomination, count) -> cashCassettes.get(denomination).getBanknotes(count));
         System.out.println("Withdrawal successful: " + formatWithdrawal(withdrawal));
         return true;
     }
@@ -84,7 +84,8 @@ public class AtmServiceImpl implements AtmService {
     @Override
     public int getBalance() {
         return cashCassettes.values().stream()
-                .mapToInt(cassette -> cassette.getCurrCountBanknote() * cassette.getBanknoteType().getDenomination())
+                .mapToInt(cassette -> cassette.getCurrCountBanknote()
+                        * cassette.getBanknoteType().getDenomination())
                 .sum();
     }
 }

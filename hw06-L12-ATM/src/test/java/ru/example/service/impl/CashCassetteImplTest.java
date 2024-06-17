@@ -1,11 +1,11 @@
 package ru.example.service.impl;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.example.model.enums.Banknote;
 import ru.example.service.CashCassette;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class CashCassetteImplTest {
 

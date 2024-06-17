@@ -88,7 +88,8 @@ public class CashCassetteImpl implements CashCassette {
 
     @Override
     public String toString() {
-        return "id=" + this.id + " " + getCurrCountBanknote() + "(" + getBanknoteType().getDenomination() + ")";
+        return "id=" + this.id + " " + getCurrCountBanknote() + "("
+                + getBanknoteType().getDenomination() + ")";
     }
 
     @Override

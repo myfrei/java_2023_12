@@ -32,11 +32,10 @@ public final class Address extends BaseObject {
 
     @Override
     public String toString() {
-        return "Address{" +
-                "id=" + getId() +
-                ", city='" + city + '\'' +
-                ", street='" + street + '\'' +
-                ", houseNumber=" + houseNumber +
-                '}';
+        return "Address{" + "id="
+                + getId() + ", city='"
+                + city + '\'' + ", street='"
+                + street + '\'' + ", houseNumber="
+                + houseNumber + '}';
     }
 }

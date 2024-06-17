@@ -2,8 +2,8 @@ package ru.example;
 
 import ru.example.model.enums.Banknote;
 import ru.example.service.AtmService;
-import ru.example.service.impl.AtmServiceImpl;
 import ru.example.service.CashCassette;
+import ru.example.service.impl.AtmServiceImpl;
 import ru.example.service.impl.CashCassetteImpl;
 
 public class Main {

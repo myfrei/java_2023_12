@@ -1,16 +1,15 @@
 package ru.example.framework;
 
-import ru.example.framework.annotation.After;
-import ru.example.framework.annotation.Before;
-import ru.example.framework.annotation.Skip;
-import ru.example.framework.annotation.Test;
-
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+import ru.example.framework.annotation.After;
+import ru.example.framework.annotation.Before;
+import ru.example.framework.annotation.Skip;
+import ru.example.framework.annotation.Test;
 
 public class ProcessingAnnotation {
     public static void run(String className, Statistic statistic) {

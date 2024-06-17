@@ -1,17 +1,15 @@
 package ru.otus.jdbc.crm.repository;
 
-
-import ru.otus.jdbc.core.repository.DataTemplate;
-import ru.otus.jdbc.core.repository.DataTemplateException;
-import ru.otus.jdbc.core.repository.executor.DbExecutor;
-import ru.otus.jdbc.crm.model.Client;
-
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import ru.otus.jdbc.core.repository.DataTemplate;
+import ru.otus.jdbc.core.repository.DataTemplateException;
+import ru.otus.jdbc.core.repository.executor.DbExecutor;
+import ru.otus.jdbc.crm.model.Client;
 
 public class ClientDataTemplateJdbc implements DataTemplate<Client> {
 
