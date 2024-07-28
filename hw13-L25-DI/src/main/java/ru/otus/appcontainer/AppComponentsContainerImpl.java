@@ -1,26 +1,64 @@
 package ru.otus.appcontainer;
 
+import ru.otus.appcontainer.api.AppComponent;
 import ru.otus.appcontainer.api.AppComponentsContainer;
 import ru.otus.appcontainer.api.AppComponentsContainerConfig;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.lang.reflect.Method;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-@SuppressWarnings("squid:S1068")
 public class AppComponentsContainerImpl implements AppComponentsContainer {
 
     private final List<Object> appComponents = new ArrayList<>();
     private final Map<String, Object> appComponentsByName = new HashMap<>();
 
-    public AppComponentsContainerImpl(Class<?> initialConfigClass) {
-        processConfig(initialConfigClass);
+    public AppComponentsContainerImpl(Class<?>... configClasses) {
+        processConfigs(configClasses);
+    }
+
+    private void processConfigs(Class<?>[] configClasses) {
+        List<Class<?>> sortedConfigClasses = Stream.of(configClasses)
+                .sorted(Comparator.comparingInt(c -> c.getAnnotation(AppComponentsContainerConfig.class).order()))
+                .toList();
+
+        for (Class<?> configClass : sortedConfigClasses) {
+            processConfig(configClass);
+        }
     }
 
     private void processConfig(Class<?> configClass) {
         checkConfigClass(configClass);
-        // You code here...
+
+        try {
+            Object configInstance = configClass.getDeclaredConstructor().newInstance();
+            Method[] methods = configClass.getDeclaredMethods();
+            List<Method> appComponentMethods = Stream.of(methods)
+                    .filter(method -> method.isAnnotationPresent(AppComponent.class))
+                    .sorted(Comparator.comparingInt(m -> m.getAnnotation(AppComponent.class).order()))
+                    .toList();
+
+            for (Method method : appComponentMethods) {
+                AppComponent appComponent = method.getAnnotation(AppComponent.class);
+                String componentName = appComponent.name();
+
+                if (appComponentsByName.containsKey(componentName)) {
+                    throw new IllegalArgumentException(String.format("Component with name %s already exists", componentName));
+                }
+
+                Class<?>[] parameterTypes = method.getParameterTypes();
+                Object[] args = Stream.of(parameterTypes)
+                        .map(this::getAppComponent)
+                        .toArray();
+
+                Object component = method.invoke(configInstance, args);
+                appComponents.add(component);
+                appComponentsByName.put(componentName, component);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to process config class: " + configClass.getName(), e);
+        }
     }
 
     private void checkConfigClass(Class<?> configClass) {
@@ -31,11 +69,26 @@ public class AppComponentsContainerImpl implements AppComponentsContainer {
 
     @Override
     public <C> C getAppComponent(Class<C> componentClass) {
-        return null;
+        List<C> components = appComponents.stream()
+                .filter(componentClass::isInstance)
+                .map(componentClass::cast)
+                .collect(Collectors.toList());
+
+        if (components.size() != 1) {
+            throw new RuntimeException(String.format("Expected one component of type %s, but found %d", componentClass.getName(), components.size()));
+        }
+
+        return components.get(0);
     }
 
     @Override
     public <C> C getAppComponent(String componentName) {
-        return null;
+        C component = (C) appComponentsByName.get(componentName);
+
+        if (component == null) {
+            throw new RuntimeException(String.format("Component with name %s not found", componentName));
+        }
+
+        return component;
     }
 }
