@@ -7,19 +7,14 @@ import java.util.Random;
 import ru.otus.web.model.User;
 
 public class InMemoryUserDao implements UserDao {
-
+    public static final String DEFAULT_USER = "admin";
     public static final String DEFAULT_PASSWORD = "1";
     private final Random random = new Random();
-    private final Map<Long, User> users;
+    private final Map<String, User> users;
 
     public InMemoryUserDao() {
         users = new HashMap<>();
-        users.put(1L, new User(1L, "admin", "admin", DEFAULT_PASSWORD));
-    }
-
-    @Override
-    public Optional<User> findById(long id) {
-        return Optional.ofNullable(users.get(id));
+        users.put(DEFAULT_USER, new User(1L, DEFAULT_USER, DEFAULT_USER, DEFAULT_PASSWORD));
     }
 
     @Override
@@ -30,6 +25,6 @@ public class InMemoryUserDao implements UserDao {
 
     @Override
     public Optional<User> findByLogin(String login) {
-        return users.values().stream().filter(v -> v.login().equals(login)).findFirst();
+        return Optional.ofNullable(users.get(login));
     }
 }
