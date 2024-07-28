@@ -1,5 +1,6 @@
 package ru.otus.appcontainer;
 
+import org.reflections.Reflections;
 import ru.otus.appcontainer.api.AppComponent;
 import ru.otus.appcontainer.api.AppComponentsContainer;
 import ru.otus.appcontainer.api.AppComponentsContainerConfig;
@@ -16,6 +17,12 @@ public class AppComponentsContainerImpl implements AppComponentsContainer {
 
     public AppComponentsContainerImpl(Class<?>... configClasses) {
         processConfigs(configClasses);
+    }
+
+    public AppComponentsContainerImpl(String packageName) {
+        Reflections reflections = new Reflections(packageName);
+        Set<Class<?>> configClasses = reflections.getTypesAnnotatedWith(AppComponentsContainerConfig.class);
+        processConfigs(configClasses.toArray(new Class<?>[0]));
     }
 
     private void processConfigs(Class<?>[] configClasses) {
@@ -47,18 +54,21 @@ public class AppComponentsContainerImpl implements AppComponentsContainer {
                     throw new IllegalArgumentException(String.format("Component with name %s already exists", componentName));
                 }
 
-                Class<?>[] parameterTypes = method.getParameterTypes();
-                Object[] args = Stream.of(parameterTypes)
-                        .map(this::getAppComponent)
-                        .toArray();
-
-                Object component = method.invoke(configInstance, args);
+                Object component = createComponent(method, configInstance);
                 appComponents.add(component);
                 appComponentsByName.put(componentName, component);
             }
         } catch (Exception e) {
             throw new RuntimeException("Failed to process config class: " + configClass.getName(), e);
         }
+    }
+
+    private Object createComponent(Method method, Object configInstance) throws Exception {
+        Class<?>[] parameterTypes = method.getParameterTypes();
+        Object[] args = Stream.of(parameterTypes)
+                .map(this::getAppComponent)
+                .toArray();
+        return method.invoke(configInstance, args);
     }
 
     private void checkConfigClass(Class<?> configClass) {
