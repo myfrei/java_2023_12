@@ -82,7 +82,7 @@ public class AppComponentsContainerImpl implements AppComponentsContainer {
         List<C> components = appComponents.stream()
                 .filter(componentClass::isInstance)
                 .map(componentClass::cast)
-                .collect(Collectors.toList());
+                .toList();
 
         if (components.size() != 1) {
             throw new RuntimeException(String.format("Expected one component of type %s, but found %d", componentClass.getName(), components.size()));
