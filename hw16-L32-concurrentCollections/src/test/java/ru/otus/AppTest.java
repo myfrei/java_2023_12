@@ -1,5 +1,17 @@
 package ru.otus;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.random.RandomGenerator;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.RepeatedTest;
 import org.mockito.ArgumentCaptor;
@@ -10,19 +22,6 @@ import ru.otus.services.SensorsDataQueueChannel;
 import ru.otus.services.SensorsDataServerImpl;
 import ru.otus.services.processors.SensorDataProcessorCommon;
 import ru.otus.services.processors.SensorDataProcessorRoom;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.random.RandomGenerator;
-import java.util.stream.Collectors;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
 
 class AppTest {
     private static final String ALL_ROOMS_BINDING = "*";
