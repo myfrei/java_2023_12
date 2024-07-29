@@ -1,88 +1,67 @@
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Клиенты</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            display: flex;
-            height: 100vh;
-            margin: 0;
-        }
-        .top {
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        input, label, h4 {
-            margin-bottom: 10px;
-        }
-        input[type=addClient] {
-            background-color: #4CAF50; /* Зеленый цвет */
-            color: white;
-            padding: 10px 20px;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 16px;
-            margin: 4px 2px;
-            transition-duration: 0.4s;
-            cursor: pointer;
-            border-radius: 5px;
-        }
-    </style>
+    <meta charset="utf-8">
 </head>
+
 <body>
-<div class="top">
-    <h4>Создать клиента</h4>
-    <br/>
-    <form action="/clients" method="post">
-        <label>Имя:</label>
-        <input type="text" name="name">
-        <br/>
-        <label>Адрес:</label>
-        <input type="text" name="address">
-        <br/>
-        <label>Телефон:</label>
-        <input type="text" name="phone">
-        <br/>
-        <input type="submit" value="Добавить">
-        <br/>
-    </form>
-</div>
-<br/>
-<div class="top">
-    <h4>Клиенты:</h4>
-    <table style="width: 800px">
-        <thead>
+<form th:action="@{/clients}" th:object="${client}" th:method="post">
+    <h4 th:text="${client.id == null} ? 'Создать клиента' : 'Обновить клиента'"></h4>
+    <table class="client">
         <tr>
-            <td style="width: 50px">Id</td>
-            <td style="width: 150px">Имя</td>
-            <td style="width: 150px">Адрес</td>
-            <td style="width: 100px">Телефон</td>
+            <td>Имя</td>
+            <td><input type="text" name="name" placeholder="Имя клиента" th:field="*{name}"/></td>
         </tr>
-        </thead>
-        <tbody>
-        <#list clients as client>
         <tr>
-            <td>${client.id}</td>
-            <td>${client.name}</td>
-            <td>${client.address.street}</td>
+            <td>Адрес</td>
+            <td><input type="text" name="address" placeholder="Адрес клиента" th:field="*{address}"/></td>
+        </tr>
+        <tr>
+            <td>Телефоны (через запятую)</td>
             <td>
-                <#list client.phones as phone>
-                <div>${phone.number}</div>
-            </#list>
+                <input type="text" name="phone" placeholder="Номер телефона клиента" th:field="*{phones}"/>
             </td>
         </tr>
-        </#list>
-        </tbody>
     </table>
-</div>
+    <input type="hidden" name="id" th:field="*{id}">
+    <input type="submit" th:value="${client.id == null} ? 'Создать' : 'Обновить'">
+</form>
+
+<h4>Список клиентов</h4>
+<table style="width: 500px" class="clients">
+    <thead>
+    <tr>
+        <th style="width: 50px">Id</th>
+        <th style="width: 150px">Имя</th>
+        <th style="width: 500px">Адрес</th>
+        <th style="width: 500px">Телефон</th>
+        <th>Изменить</th>
+        <th>Удалить</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="c : ${clients}">
+        <td th:text="${c.id}"></td>
+        <td th:text="${c.name}"></td>
+        <td th:text="${c.address}"></td>
+        <td>
+                <span th:each="p : ${c.phones}">
+                    <div th:text="${p.number}"></div>
+                </span>
+        </td>
+        <td>
+            <form action="#" th:action="@{/clients/{id}(id=${c.id})}" th:method="put">
+                <input type="submit" value="Update">
+            </form>
+        </td>
+        <td>
+            <form action="#" th:action="@{/clients/{id}(id=${c.id})}" th:method="delete">
+                <input type="submit" value="Delete">
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
 </body>
 </html>

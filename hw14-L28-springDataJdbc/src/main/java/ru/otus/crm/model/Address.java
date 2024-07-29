@@ -1,32 +1,35 @@
 package ru.otus.crm.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.PersistenceCreator;
+import org.springframework.data.relational.core.mapping.Table;
 
 @Setter
 @Getter
-@AllArgsConstructor
-@NoArgsConstructor
-@Entity
-@Table(name = "address")
-public class Address implements Cloneable {
+@Table("address")
+public class Address {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
     private Long id;
 
-    @Column(name = "street")
     private String street;
 
-    public Address clone() {
-        return new Address(this.id, this.street);
+    private Long clientId;
+
+    public Address(String street) {
+        this(null, street, null);
+    }
+
+    @PersistenceCreator
+    public Address(Long id, String street, Long clientId) {
+        this.id = id;
+        this.street = street;
+        this.clientId = clientId;
+    }
+
+    @Override
+    public String toString() {
+        return street;
     }
 }

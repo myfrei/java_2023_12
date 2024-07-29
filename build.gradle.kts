@@ -40,6 +40,7 @@ allprojects {
     val jetty: String by project
     val freemarker: String by project
     val reflections: String by project
+    val springframeworkBoot: String by project
 
     apply(plugin = "io.spring.dependency-management")
     dependencyManagement {
@@ -64,6 +65,9 @@ allprojects {
             dependency("org.eclipse.jetty:jetty-util:$jetty")
             dependency("org.freemarker:freemarker:$freemarker")
             dependency("org.reflections:reflections:$reflections")
+            dependency("org.springframework.boot:spring-boot-starter-web:$springframeworkBoot")
+            dependency("org.springframework.boot:spring-boot-starter-data-jdbc:$springframeworkBoot")
+            dependency("org.springframework.boot:spring-boot-starter-thymeleaf:$springframeworkBoot")
         }
     }
 }
