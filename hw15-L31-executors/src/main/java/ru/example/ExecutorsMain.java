@@ -1,10 +1,14 @@
 package ru.example;
 
-public class ExecutorsMain {
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+public class ExecutorsMain {
+    private static final Logger log = LoggerFactory.getLogger(ExecutorsMain.class);
+    private static final String THREAD_ONE = "Поток 1";
+    private static final String THREAD_TWO = "Поток 2";
     private static final int MIN = 1;
     private static final int MAX = 10;
-    private final Object lock = new Object();
     private boolean isFirstThreadTurn = true;
     private int counter = 1;
     private boolean isAscending = true;
@@ -12,8 +16,10 @@ public class ExecutorsMain {
 
     public static void main(String[] args) {
         ExecutorsMain executorsMain = new ExecutorsMain();
-        Thread thread1 = new Thread(executorsMain.new NumberPrinter("Поток 1"));
-        Thread thread2 = new Thread(executorsMain.new NumberPrinter("Поток 2"));
+        Thread thread1 = new Thread(executorsMain.new NumberPrinter(true));
+        Thread thread2 = new Thread(executorsMain.new NumberPrinter(false));
+        thread1.setName(THREAD_ONE);
+        thread2.setName(THREAD_TWO);
 
         thread1.start();
         thread2.start();
@@ -27,44 +33,37 @@ public class ExecutorsMain {
     }
 
     class NumberPrinter implements Runnable {
-        private final String threadName;
+        private final boolean isThreadOne;
 
-        public NumberPrinter(String threadName) {
-            this.threadName = threadName;
+        public NumberPrinter(boolean isThreadOne) {
+            this.isThreadOne = isThreadOne;
         }
 
         @Override
         public void run() {
-            while (true) {
-                synchronized (lock) {
-                    while ((threadName.equals("Поток 1") && !isFirstThreadTurn)
-                            || (threadName.equals("Поток 2") && isFirstThreadTurn)) {
-                        if (isCompleted) {
-                            lock.notifyAll();
-                            return;
-                        }
+            while (!Thread.currentThread().isInterrupted() && !isCompleted) {
+                synchronized (ExecutorsMain.this) {
+                    while (isThreadOne != isFirstThreadTurn && !isCompleted) {
                         try {
-                            lock.wait();
+                            ExecutorsMain.this.wait();
                         } catch (InterruptedException e) {
                             Thread.currentThread().interrupt();
                             return;
                         }
                     }
 
-                    if (isCompleted) {
-                        lock.notifyAll();
+                    if (Thread.currentThread().isInterrupted() || isCompleted) {
                         return;
                     }
 
-                    System.out.printf("%s: %d%n", threadName, counter);
+                    log.info("{} -> {}", Thread.currentThread().getName(), counter);
 
-                    isFirstThreadTurn = !isFirstThreadTurn;
-
-                    if (threadName.equals("Поток 2")) {
+                    if (!isThreadOne) {
                         updateCounterAndDirection();
                     }
 
-                    lock.notifyAll();
+                    isFirstThreadTurn = !isFirstThreadTurn;
+                    ExecutorsMain.this.notifyAll();
                 }
             }
         }
