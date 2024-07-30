@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+option java_package = "ru.example";
+option java_outer_classname = "NumbersProto";
+
+service NumbersService {
+  rpc GenerateNumbers (NumberRange) returns (stream Number);
+}
+
+message NumberRange {
+  int32 firstValue = 1;
+  int32 lastValue = 2;
+}
+
+message Number {
+  int32 value = 1;
+}
