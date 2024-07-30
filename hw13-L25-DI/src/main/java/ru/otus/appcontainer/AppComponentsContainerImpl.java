@@ -1,14 +1,12 @@
 package ru.otus.appcontainer;
 
+import java.lang.reflect.Method;
+import java.util.*;
+import java.util.stream.Stream;
 import org.reflections.Reflections;
 import ru.otus.appcontainer.api.AppComponent;
 import ru.otus.appcontainer.api.AppComponentsContainer;
 import ru.otus.appcontainer.api.AppComponentsContainerConfig;
-
-import java.lang.reflect.Method;
-import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class AppComponentsContainerImpl implements AppComponentsContainer {
 
@@ -27,7 +25,8 @@ public class AppComponentsContainerImpl implements AppComponentsContainer {
 
     private void processConfigs(Class<?>[] configClasses) {
         List<Class<?>> sortedConfigClasses = Stream.of(configClasses)
-                .sorted(Comparator.comparingInt(c -> c.getAnnotation(AppComponentsContainerConfig.class).order()))
+                .sorted(Comparator.comparingInt(
+                        c -> c.getAnnotation(AppComponentsContainerConfig.class).order()))
                 .toList();
 
         for (Class<?> configClass : sortedConfigClasses) {
@@ -43,7 +42,8 @@ public class AppComponentsContainerImpl implements AppComponentsContainer {
             Method[] methods = configClass.getDeclaredMethods();
             List<Method> appComponentMethods = Stream.of(methods)
                     .filter(method -> method.isAnnotationPresent(AppComponent.class))
-                    .sorted(Comparator.comparingInt(m -> m.getAnnotation(AppComponent.class).order()))
+                    .sorted(Comparator.comparingInt(
+                            m -> m.getAnnotation(AppComponent.class).order()))
                     .toList();
 
             for (Method method : appComponentMethods) {
@@ -51,7 +51,8 @@ public class AppComponentsContainerImpl implements AppComponentsContainer {
                 String componentName = appComponent.name();
 
                 if (appComponentsByName.containsKey(componentName)) {
-                    throw new IllegalArgumentException(String.format("Component with name %s already exists", componentName));
+                    throw new IllegalArgumentException(
+                            String.format("Component with name %s already exists", componentName));
                 }
 
                 Object component = createComponent(method, configInstance);
@@ -65,9 +66,7 @@ public class AppComponentsContainerImpl implements AppComponentsContainer {
 
     private Object createComponent(Method method, Object configInstance) throws Exception {
         Class<?>[] parameterTypes = method.getParameterTypes();
-        Object[] args = Stream.of(parameterTypes)
-                .map(this::getAppComponent)
-                .toArray();
+        Object[] args = Stream.of(parameterTypes).map(this::getAppComponent).toArray();
         return method.invoke(configInstance, args);
     }
 
@@ -85,7 +84,8 @@ public class AppComponentsContainerImpl implements AppComponentsContainer {
                 .toList();
 
         if (components.size() != 1) {
-            throw new RuntimeException(String.format("Expected one component of type %s, but found %d", componentClass.getName(), components.size()));
+            throw new RuntimeException(String.format(
+                    "Expected one component of type %s, but found %d", componentClass.getName(), components.size()));
         }
 
         return components.get(0);
