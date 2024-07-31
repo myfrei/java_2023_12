@@ -52,10 +52,6 @@ public class ExecutorsMain {
                         }
                     }
 
-                    if (Thread.currentThread().isInterrupted() || isCompleted) {
-                        return;
-                    }
-
                     log.info("{} -> {}", Thread.currentThread().getName(), counter);
 
                     if (!isThreadOne) {
